@@ -28,7 +28,8 @@ public class Main {
 
         //Pipe it
         lines = (switch (inputType) {
-            case "string" -> Pipeline.buildStringPipeline(operations).computeForStream(lines,threadCount);
+            case "string" -> Pipeline.buildStringPipeline(operations)
+                    .computeForStream(lines,threadCount);
             //The following statements use a view of the stream to make further processing simpler.
             case "int" -> Pipeline.buildIntegerPipeline(operations)
                     .computeForStreamWithView(lines, Integer::parseInt, String::valueOf,threadCount);

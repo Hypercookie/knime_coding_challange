@@ -135,7 +135,8 @@ public class Pipeline<T> {
     public Stream<T> computeForStream(Stream<T> s, int threadCount) {
         ForkJoinPool fjp = new ForkJoinPool(threadCount);
         //The stream is first mapped to completable futures, and then those are awaited. Since the stream is sequential, there is no loss of order.
-        return s.sequential().map(l -> CompletableFuture.supplyAsync(() -> this.computeForElement(l), fjp))
+        return s.sequential()
+                .map(l -> CompletableFuture.supplyAsync(() -> this.computeForElement(l), fjp))
                 .map(CompletableFuture::join);
     }
 
