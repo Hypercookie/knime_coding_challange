@@ -90,7 +90,7 @@ public class Pipeline<T> {
     /**
      * stores the pipeline as an unevaluated function
      */
-    private Function<T, T> mapper = Function.identity();
+    private Function<T, T> m_mapper = Function.identity();
 
     /**
      * This method adds a step to the pipeline. This step will be executed after all previous steps.
@@ -99,7 +99,7 @@ public class Pipeline<T> {
      * @return the pipeline with the new step
      */
     public Pipeline<T> addPipelineStep(Function<T, T> step) {
-        mapper = mapper.andThen(step);
+        m_mapper = m_mapper.andThen(step);
         return this;
     }
 
@@ -111,7 +111,7 @@ public class Pipeline<T> {
      * @return the pipeline with the new pipeline at the end
      */
     public Pipeline<T> appendPipeline(Pipeline<T> pline) {
-        this.addPipelineStep(pline.mapper);
+        this.addPipelineStep(pline.m_mapper);
         return this;
     }
 
@@ -122,7 +122,7 @@ public class Pipeline<T> {
      * @return the result of the pipeline
      */
     public T computeForElement(T element) {
-        return this.mapper.apply(element);
+        return this.m_mapper.apply(element);
     }
 
     /**

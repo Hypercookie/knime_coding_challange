@@ -10,9 +10,9 @@ import java.util.Set;
  */
 public class Statistics {
 
-    private final Set<String> linesRead = new HashSet<>();
+    private final Set<String> m_linesRead = new HashSet<>();
 
-    private int lineCounter;
+    private int m_lineCounter;
     private static Statistics instance;
 
     /**
@@ -22,22 +22,22 @@ public class Statistics {
      * @param line A new line that has been read from the input file.
      */
     public void updateStatisticsWithLine(final String line) {
-        lineCounter++;
-        linesRead.add(line);
+        m_lineCounter++;
+        m_linesRead.add(line);
     }
 
     /**
      * @return the total number of lines read.
      */
     public int getNoOfLinesRead() {
-        return lineCounter;
+        return m_lineCounter;
     }
 
     /**
      * @return the number of unique lines read.
      */
     public int getNoOfUniqueLines() {
-        return linesRead.size();
+        return m_linesRead.size();
     }
 
     /**
