@@ -49,7 +49,7 @@ public class Pipeline<T> {
     }
 
     /**
-     * This method generates a integer processing pipeline out of operations that shall be performed on the stream of elements
+     * This method generates an integer processing pipeline out of operations that shall be performed on the stream of elements
      *
      * @param operations a list of operations
      * @return a pipeline performing these operations or nothing if an operation is not implemented
@@ -78,6 +78,9 @@ public class Pipeline<T> {
         Pipeline<Double> pipe = new Pipeline<>();
         for (String operation : operations) {
             pipe.appendPipeline(
+                    // Usually these are not enough statements for a switch statement to be applicable.
+                    // Since the set of possible operations is likely to grow in the future, it shall still be a switch
+                    // statement to make extensions easier to develop
                     switch (operation) {
                         case "neg" -> new Pipeline<Double>().addPipelineStep(v -> -v);
                         default -> new Pipeline<>();
@@ -95,7 +98,7 @@ public class Pipeline<T> {
     /**
      * This method adds a step to the pipeline. This step will be executed after all previous steps.
      *
-     * @param step a function that shall be computed on the lements
+     * @param step a function that shall be computed on the elements
      * @return the pipeline with the new step
      */
     public Pipeline<T> addPipelineStep(Function<T, T> step) {
@@ -107,11 +110,11 @@ public class Pipeline<T> {
      * Append an entire pipeline to the current one. This will execute the steps defined in the second pipeline after
      * the previously defined steps.
      *
-     * @param pline the pipeline to append
+     * @param pipeline the pipeline to append
      * @return the pipeline with the new pipeline at the end
      */
-    public Pipeline<T> appendPipeline(Pipeline<T> pline) {
-        this.addPipelineStep(pline.m_mapper);
+    public Pipeline<T> appendPipeline(Pipeline<T> pipeline) {
+        this.addPipelineStep(pipeline.m_mapper);
         return this;
     }
 
@@ -134,7 +137,8 @@ public class Pipeline<T> {
      */
     public Stream<T> computeForStream(Stream<T> s, int threadCount) {
         ForkJoinPool fjp = new ForkJoinPool(threadCount);
-        //The stream is first mapped to completable futures, and then those are awaited. Since the stream is sequential, there is no loss of order.
+        //The stream is first mapped to completable futures, and then those are awaited. Since the stream is sequential,
+        // there is no loss of order.
         return s.sequential()
                 .map(l -> CompletableFuture.supplyAsync(() -> this.computeForElement(l), fjp))
                 .map(CompletableFuture::join);

@@ -25,16 +25,16 @@ public class Main {
 
         //Get the stream of lines
         Stream<String> lines = Utils.readFileAsStream(fileName);
-
-        //Pipe it
+        //Add stats and
+        //Compute pipeline
         lines = (switch (inputType) {
             case "string" -> Pipeline.buildStringPipeline(operations)
-                    .computeForStream(lines,threadCount);
+                    .computeForStream(lines, threadCount);
             //The following statements use a view of the stream to make further processing simpler.
             case "int" -> Pipeline.buildIntegerPipeline(operations)
-                    .computeForStreamWithView(lines, Integer::parseInt, String::valueOf,threadCount);
+                    .computeForStreamWithView(lines, Integer::parseInt, String::valueOf, threadCount);
             case "double" -> Pipeline.buildDoublePipeline(operations)
-                    .computeForStreamWithView(lines, Double::parseDouble, String::valueOf,threadCount);
+                    .computeForStreamWithView(lines, Double::parseDouble, String::valueOf, threadCount);
             default -> lines;
         }).peek(v -> Statistics.getInstance().updateStatisticsWithLine(v));
 
@@ -54,10 +54,6 @@ public class Main {
             });
             writer.flush();
         }
-//      Could be replaced with
-//      System.out.printf("Processed %d lines (%d of which were unique)%n", //
-//              Statistics.getInstance().getNoOfLinesRead(), //
-//              Statistics.getInstance().getNoOfUniqueLines());
         // DO NOT CHANGE THE FOLLOWING LINES OF CODE
         System.out.println(String.format("Processed %d lines (%d of which were unique)", //
                 Statistics.getInstance().getNoOfLinesRead(), //
